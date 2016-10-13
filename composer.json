@@ -1,0 +1,12 @@
+{
+    "name": "ctsai/enh",
+    "description": "For Edosion Noodle House bookeeping",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Chia-Chen Tsai",
+            "email": "chiachent2012@gmail.com"
+        }
+    ],
+    "require": {}
+}
