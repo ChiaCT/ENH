@@ -8,5 +8,7 @@
             "email": "chiachent2012@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "slim/slim": "3.*"
+    }
 }
