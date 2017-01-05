@@ -1,6 +1,5 @@
 <?php
-
-namespace ENH\Core;
+namespace ENH\Database;
 
 /**
  * Description of SalaryHistory
@@ -9,9 +8,9 @@ namespace ENH\Core;
  */
 class SalaryHistory extends DB_Wrapper
 {
-    public function __construct($config, $option = false)
+    public function __construct($option = false)
     {
-        parent::__construct($config, $option);
+        parent::__construct($option);
         $this->dataFilter = array(
             "insert"=>array(
                 "salary",
@@ -36,13 +35,34 @@ class SalaryHistory extends DB_Wrapper
     protected function prepareData($rawData, $filter)
     {
         $data = array(
-            "id"=>array("value"=>$rawData["id"], "type"=>\PDO::PARAM_INT),
-            "salary"=>array("value"=>$rawData["salary"], "type"=>\PDO::PARAM_STR),
-            "pay_period"=>array("value"=>$rawData["pay_period"], "type"=>\PDO::PARAM_INT),
-            "effective_date"=>array("value"=>$rawData["effective_date"], "type"=>\PDO::PARAM_STR),
-            "is_current"=>array("value"=>$rawData["is_current"], "type"=>\PDO::PARAM_BOOL),
-            "modified_by"=>array("value"=>$rawData["modified_by"], "type"=>\PDO::PARAM_STR),
-            "created_by"=>array("value"=>$rawData["created_by"], "type"=>\PDO::PARAM_STR),
+            "id" => array(
+                "value" => $rawData["id"],
+                "type" => \PDO::PARAM_INT
+            ),
+            "salary" => array(
+                "value" => $rawData["salary"],
+                "type" => \PDO::PARAM_STR
+            ),
+            "pay_period" => array(
+                "value" => $rawData["pay_period"],
+                "type" => \PDO::PARAM_INT
+            ),
+            "effective_date" => array(
+                "value" => $rawData["effective_date"],
+                "type" => \PDO::PARAM_STR
+            ),
+            "is_current" => array(
+                "value" => $rawData["is_current"],
+                "type" => \PDO::PARAM_BOOL
+            ),
+            "modified_by" => array(
+                "value" => $rawData["modified_by"],
+                "type" => \PDO::PARAM_STR
+            ),
+            "created_by" => array(
+                "value" => $rawData["created_by"],
+                "type" => \PDO::PARAM_STR
+            ),
         );
         
         return $this->filterData($data, $filter);

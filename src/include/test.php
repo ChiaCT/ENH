@@ -181,7 +181,7 @@ $insertTransactionData = array(
     "modified_by"=>"SYSTEM",
     "created_by"=>"SYSTEM"
 );
-$updateTransactionyData = array(
+$updateTransactionData = array(
     "id"=>null,
     "account_id"=>2,
     "payment_type_id"=>2,
@@ -191,6 +191,47 @@ $updateTransactionyData = array(
     "transaction_date"=>"2016-03-03",
     "pay_date"=>"",
     "exclude"=>true,
+    "modified_by"=>"ctsai",
+    "created_by"=>"SYSTEM"
+);
+//Account TEST DATA
+$insertAccountData = array(
+    "id"=>null,
+    "account_name"=>"Sale",
+    "account_type_id"=>1,
+    "active"=>true,
+    "modified_by"=>"SYSTEM",
+    "created_by"=>"SYSTEM"
+);
+$updateAccountData = array(
+    "id"=>null,
+    "account_name"=>"Tip",
+    "account_type_id"=>2,
+    "active"=>false,
+    "modified_by"=>"ctsai",
+    "created_by"=>"SYSTEM"
+);
+
+//Account TEST DATA
+$insertCashData = array(
+    "id"=>null,
+    "hundred"=>1,
+    "fifty"=>0,
+    "twenty"=>1,
+    "ten"=>0,
+    "five"=>1,
+    "one"=>0,
+    "modified_by"=>"SYSTEM",
+    "created_by"=>"SYSTEM"
+);
+$updateCashData = array(
+    "id"=>null,
+    "hundred"=>0,
+    "fifty"=>1,
+    "twenty"=>0,
+    "ten"=>1,
+    "five"=>0,
+    "one"=>1,
     "modified_by"=>"ctsai",
     "created_by"=>"SYSTEM"
 );

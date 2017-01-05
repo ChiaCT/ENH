@@ -1,19 +1,19 @@
 <?php
-namespace ENH\Core;
+namespace ENH\Database;
 
 /**
- * Description of email
+ * Description of company
  *
  * @author CTSAI
  */
-class Email extends DB_Wrapper
+class Company extends DB_Wrapper
 {
-    public function __construct($config, $option = false)
+    public function __construct($option = false)
     {
-        parent::__construct($config, $option);
+        parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("email_type", "email_address", "modified_by", "created_by"),
-            "update"=>array("id", "email_type", "email_address", "modified_by"),
+            "insert"=>array("company_name", "modified_by", "created_by"),
+            "update"=>array("id", "company_name", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -21,11 +21,22 @@ class Email extends DB_Wrapper
     protected function prepareData($rawData, $filter)
     {
         $data = array(
-            "id"=>array("value"=>$rawData["id"], "type"=>\PDO::PARAM_INT),
-            "email_type"=>array("value"=>$rawData["email_type"], "type"=>\PDO::PARAM_STR),
-            "email_address"=>array("value"=>$rawData["email_address"], "type"=>\PDO::PARAM_STR),
-            "modified_by"=>array("value"=>$rawData["modified_by"], "type"=>\PDO::PARAM_STR),
-            "created_by"=>array("value"=>$rawData["created_by"], "type"=>\PDO::PARAM_STR),
+            "id" => array(
+                "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "company_name" => array(
+                "value" => isset($rawData["company_name"]) ? $rawData["company_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "modified_by" => array(
+                "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "created_by" => array(
+                "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
         );
         
         return $this->filterData($data, $filter);
@@ -34,41 +45,38 @@ class Email extends DB_Wrapper
     public function delete($id)
     {
         $stmt = "   DELETE
-                    FROM    `email`
+                    FROM    `company`
                     WHERE   `id` = :id;";
         
         return parent::exec($stmt, $this->prepareData(array("id"=>$id), "delete"));
     }
-
+    
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`,                       
-                            `email_type`,
-                            `email_address`,
+        $stmt = "   SELECT  `id`
+                            `company_name`,
                             `modified_by`,
                             `modified_on`,
                             `created_by`,
                             `created_on`
-                    FROM    `email`
+                    FROM    `company`
                     $where
                     $orderBy
                     $limit;";
         
         return parent::select($stmt);
     }
-
+    
     public function insert($rawData)
     {
-        $stmt = "   INSERT INTO `email` (
-                        `email_type`,
-                        `email_address`,
+        $stmt = "   INSERT INTO `company` (
+                        `company_name`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
                         `created_on`
                     ) VALUES (
-                        :email_type,
-                        :email_address,
+                        :company_name,
                         :modified_by,
                         NOW(),
                         :created_by,
@@ -78,17 +86,15 @@ class Email extends DB_Wrapper
         
         return $result;
     }
-
+    
     public function update($rawData)
     {
-        $stmt = "   UPDATE  `email`
-                    SET     `email_type` = :email_type,
-                            `email_address` = :email_address,
+        $stmt = "   UPDATE  `company`
+                    SET     `company_name` = :company_name,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";
-        $result = parent::exec($stmt, $this->prepareData($rawData, "update"));
         
-        return $result;
+        return parent::exec($stmt, $this->prepareData($rawData, "update"));
     }
 }

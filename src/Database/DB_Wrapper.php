@@ -1,5 +1,5 @@
 <?php
-namespace ENH\Core;
+namespace ENH\Database;
 
 /**
  * Description of DB_Wrapper
@@ -8,29 +8,54 @@ namespace ENH\Core;
  */
 abstract class DB_Wrapper
 {
-    private $config, $dbh;
-    protected $dataFilter;
-
     public abstract function insert($rawData);
     public abstract function update($rawData);
     public abstract function delete($id);
     public abstract function getRow($where = '', $orderBy = '', $limit = '');
-    protected abstract function prepareData($rawData, $filter);
     
-    public function __construct($config, $option = false)
+    protected $dataFilter;
+    
+    protected static $dbh = null;
+    
+    protected abstract function prepareData($rawData, $filter);
+    protected function __construct($option = false) {}
+    protected function __clone() {}
+
+    public static function instance()
     {
-        $this->config = $config;
-        $this->init();
+        if (self::$dbh === null)
+        {
+            $dsn      = "mysql:host=" . ENH_MYSQL_HOST . ";dbname=" . ENH_MYSQL_DBNAME;
+            $dbConfig = array("dsn"=>$dsn, "username"=>ENH_MYSQL_USERNAME, "password"=>ENH_MYSQL_PASSWORD);
+            $opt      = array(
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_SILENT,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+            );
+            try {
+                self::$dbh = new \PDO($dbConfig["dsn"], $dbConfig["username"], $dbConfig["password"], $opt);
+            } catch (Exception $ex) {
+                die($ex->getMessage());
+            }
+        }
+        return self::$dbh;
+    }
+
+    public static function __callStatic($method, $args)
+    {
+        return call_user_func_array(array(self::instance(), $method), $args);
+    }
+
+    public static function run($sql, $args = [])
+    {
+        $stmt = self::instance()->prepare($sql);
+        $stmt->execute($args);
+        return $stmt;
     }
     
-    private function init($option = false)
+    public function getStatus($status)
     {
-        try {
-            $this->dbh = new \PDO($this->config["dsn"], $this->config["username"], $this->config["password"]);
-            $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (Exception $ex) {
-            die($ex->getMessage());
-        }
+        var_dump(self::$dbh);
+        print_r(self::$dbh->getAttribute($status));
     }
     
     /**
@@ -43,7 +68,7 @@ abstract class DB_Wrapper
     protected function exec($stmt, $data, $option = false)
     {
         try {
-            $sth = $this->dbh->prepare($stmt);
+            $sth = self::$dbh->prepare($stmt);
             foreach ($data as $k => $v) {
                 $sth->bindValue(":$k", $v["value"], $v["type"]);
             }
@@ -52,7 +77,7 @@ abstract class DB_Wrapper
             if ($result === false || $count === 0) {
                 return array("success"=>false, "errorMsg"=>$sth->errorInfo()[2]);
             } else {
-                return array("success"=>true, "lastId"=>$this->dbh->lastInsertId());
+                return array("success"=>true, "lastId"=>self::$dbh->lastInsertId());
             }
         } catch (Exception $ex) {
             die($ex->getMessage());
@@ -61,13 +86,13 @@ abstract class DB_Wrapper
     protected function select($stmt)
     {
         try {
-            $result = $this->dbh->query($stmt);
+            $result = self::$dbh->query($stmt);
         } catch (Exception $ex) {
             die($ex->getMessage());
         }
         
         if ($result === false) {
-            return array("success"=>false, "errorMsg"=>$this->dbh->errorInfo()[2]);
+            return array("success"=>false, "errorMsg"=>self::$dbh->errorInfo()[2]);
         } else {
             return array("success"=>true, "rows"=>$result->fetchAll(\PDO::FETCH_ASSOC));
         }
@@ -114,7 +139,7 @@ abstract class DB_Wrapper
     {
         $stmt = "TRUNCATE $table;";
         try {
-            $truncate = $this->dbh->query($stmt);
+            $truncate = self::$dbh->query($stmt);
         } catch (Exception $ex) {
             die($ex->getMessage());
         }
@@ -134,7 +159,7 @@ abstract class DB_Wrapper
                     WHERE	TABLE_SCHEMA = '$db'
                     AND		TABLE_TYPE = 'BASE TABLE';";
         try {
-            $select = $this->dbh->query($stmt, \PDO::FETCH_ASSOC);
+            $select = self::$dbh->query($stmt, \PDO::FETCH_ASSOC);
             foreach ($select as $row) {
                 $tables[] = $row["TABLE_NAME"];
             }

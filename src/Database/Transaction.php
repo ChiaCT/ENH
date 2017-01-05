@@ -1,5 +1,5 @@
 <?php
-namespace ENH\Core;
+namespace ENH\Database;
 
 /**
  * Description of Transaction
@@ -8,9 +8,9 @@ namespace ENH\Core;
  */
 class Transaction extends DB_Wrapper
 {
-    public function __construct($config, $option = false)
+    public function __construct($option = false)
     {
-        parent::__construct($config, $option);
+        parent::__construct($option);
         $this->dataFilter = array(
             "insert"=>array(
                 "account_id",
@@ -43,17 +43,50 @@ class Transaction extends DB_Wrapper
     protected function prepareData($rawData, $filter)
     {
         $data = array(
-            "id"=>array("value"=>$rawData["id"], "type"=>\PDO::PARAM_INT),
-            "account_id"=>array("value"=>$rawData["account_id"], "type"=>\PDO::PARAM_INT),
-            "payment_type_id"=>array("value"=>$rawData["payment_type_id"], "type"=>\PDO::PARAM_INT),
-            "reference_id"=>array("value"=>$rawData["reference_id"], "type"=>\PDO::PARAM_INT),
-            "note_id"=>array("value"=>$rawData["note_id"], "type"=>\PDO::PARAM_INT),
-            "amount"=>array("value"=>$rawData["amount"], "type"=>\PDO::PARAM_STR),
-            "transaction_date"=>array("value"=>$rawData["transaction_date"], "type"=>\PDO::PARAM_STR),
-            "pay_date"=>array("value"=>$rawData["pay_date"], "type"=>\PDO::PARAM_STR),
-            "exclude"=>array("value"=>$rawData["exclude"], "type"=>\PDO::PARAM_BOOL),
-            "modified_by"=>array("value"=>$rawData["modified_by"], "type"=>\PDO::PARAM_STR),
-            "created_by"=>array("value"=>$rawData["created_by"], "type"=>\PDO::PARAM_STR),
+            "id" => array(
+                "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type"=>\PDO::PARAM_INT
+            ),
+            "account_id" => array(
+                "value" => isset($rawData["account_id"]) ? $rawData["account_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "payment_type_id" => array(
+                "value" => isset($rawData["payment_type_id"]) ? $rawData["payment_type_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "reference_id" => array(
+                "value" => isset($rawData["reference_id"]) ? $rawData["reference_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "note_id" => array(
+                "value" => isset($rawData["note_id"]) ? $rawData["note_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "amount" => array(
+                "value" => isset($rawData["amount"]) ? $rawData["amount"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "transaction_date" => array(
+                "value" => isset($rawData["transaction_date"]) ? $rawData["transaction_date"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "pay_date" => array(
+                "value" => isset($rawData["pay_date"]) ? $rawData["pay_date"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "exclude" => array(
+                "value" => isset($rawData["exclude"]) ? $rawData["exclude"] : '',
+                "type" => \PDO::PARAM_BOOL
+            ),
+            "modified_by" => array(
+                "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "created_by" => array(
+                "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
         );
         
         return $this->filterData($data, $filter);

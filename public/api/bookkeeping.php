@@ -3,20 +3,26 @@ namespace ENH\Api;
 
 require_once "../../src/include/config-dev.php";
 require_once "../../src/include/test.php";
+require_once "../../src/include/ENHAutoloader.php";
 
-require_once "../../src/Core/DB_Wrapper.php";
-require_once "../../src/Core/account.php";
-require_once "../../src/Core/company.php";
-require_once "../../src/Core/address.php";
-require_once "../../src/Core/email.php";
-require_once "../../src/Core/phone.php";
-require_once "../../src/Core/person.php";
-require_once "../../src/Core/AccountType.php";
-require_once "../../src/Core/Employee.php";
-require_once "../../src/Core/Note.php";
-require_once "../../src/Core/Reference.php";
-require_once "../../src/Core/SalaryHistory.php";
-require_once "../../src/Core/Transaction.php";
+//require_once "../../src/Database/DB_Wrapper.php";
+//require_once "../../src/Database/Account.php";
+//require_once "../../src/Database/Company.php";
+//require_once "../../src/Database/Address.php";
+//require_once "../../src/Database/Email.php";
+//require_once "../../src/Database/Phone.php";
+//require_once "../../src/Database/Person.php";
+//require_once "../../src/Database/AccountType.php";
+//require_once "../../src/Database/Employee.php";
+//require_once "../../src/Database/Note.php";
+//require_once "../../src/Database/Reference.php";
+//require_once "../../src/Database/SalaryHistory.php";
+//require_once "../../src/Database/Transaction.php";
+//require_once "../../src/Database/Cash.php";
+
+$loader = new \ENH\Core\ENHAutoloaderClass;
+$loader->register();
+$loader->addNamespace("ENH\Database", "../../src/Database");
 
 $dsn      = "mysql:host=" . ENH_MYSQL_HOST . ";dbname=" . ENH_MYSQL_DBNAME;
 $dbConfig = array("dsn"=>$dsn, "username"=>ENH_MYSQL_USERNAME, "password"=>ENH_MYSQL_PASSWORD);
@@ -35,10 +41,10 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 $action = strtolower(trim(filter_input($filter, "action")));
 $data   = json_encode(trim(filter_input($filter, "data")));
 
-$testObj        = new \ENH\Core\Transaction($dbConfig);
-$testInsertData = $insertTransactionData;
-$testUpdateData = $updateTransactionData;
-
+//$testInsertData = $insertCashData;
+//$testUpdateData = $updateCashData;
+$db = \ENH\Database\DB_Wrapper::instance();
+$account = new \ENH\Database\Account();
 switch ($action) {
     case "account_add_person":
         
@@ -80,34 +86,35 @@ switch ($action) {
         
         break;
     case "test_reset":
-        //print_r("-----------------reset-----------------\n");
-        //$result  = $testObj->resetTable("phone");
+//        print_r("-----------------reset-----------------\n");
+//        $result  = $testObj->resetTable("account");
         
-        print_r("\n-----------------insert-----------------\n");
-        $insert  = $testObj->insert($testInsertData);
-        if ($insert["success"]) {
-            $lastInsertId = $insert["lastId"];
-            print_r("\n-----------------select-----------------\n");
-            $selectInsert = $testObj->getRow("WHERE id=$lastInsertId");
-            print_r($selectInsert["rows"][0]);
-            print_r("Last Id: $lastInsertId\n");
-            print_r("\n-----------------update-----------------\n");
-            $testUpdateData["id"] = $lastInsertId;
-            $update = $testObj->update($testUpdateData);
-        
-            print_r("\n-----------------select-----------------\n");
-            $selectUpdate  = $testObj->getRow("WHERE id=$lastInsertId");
-            print_r($selectUpdate["rows"][0]);
-            
-            print_r("\n-----------------delete-----------------\n");
-            $delete  = $testObj->delete($lastInsertId);
-            
-            print_r("\n-----------------select-----------------\n");
-            $selectUpdate  = $testObj->getRow();
-            print_r($selectUpdate["rows"]);
-        } else {
-            print_r("\n-----------------insert failed-----------------\n");
-        }
-
+//        print_r("\n-----------------insert-----------------\n");
+//        $insert  = $testObj->insert($testInsertData);
+//        if ($insert["success"]) {
+//            $lastInsertId = $insert["lastId"];
+//            print_r("\n-----------------select-----------------\n");
+//            $selectInsert = $testObj->getRow("WHERE id=$lastInsertId");
+//            print_r($selectInsert["rows"][0]);
+//            print_r("Last Id: $lastInsertId\n");
+//            print_r("\n-----------------update-----------------\n");
+//            $testUpdateData["id"] = $lastInsertId;
+//            $update = $testObj->update($testUpdateData);
+//        
+//            print_r("\n-----------------select-----------------\n");
+//            $selectUpdate  = $testObj->getRow("WHERE id=$lastInsertId");
+//            print_r($selectUpdate["rows"][0]);
+//            
+//            print_r("\n-----------------delete-----------------\n");
+//            $delete  = $testObj->delete($lastInsertId);
+//            
+//            print_r("\n-----------------select-----------------\n");
+//            $selectUpdate  = $testObj->getRow();
+//            print_r($selectUpdate["rows"]);
+//        } else {
+//            print_r("\n-----------------insert failed-----------------\n");
+//        }
+        $accountInsert = $account->insert($insertAccountData);
+        $accountSelect = $account->getRow();
         break;
 }

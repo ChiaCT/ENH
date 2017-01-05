@@ -1,5 +1,5 @@
 <?php
-namespace ENH\Core;
+namespace ENH\Database;
 
 /**
  * Description of person
@@ -8,9 +8,9 @@ namespace ENH\Core;
  */
 class Person extends DB_Wrapper
 {
-    public function __construct($config, $option = false)
+    public function __construct($option = false)
     {
-        parent::__construct($config, $option);
+        parent::__construct($option);
         $this->dataFilter = array(
             "insert"=>array("nickname", "first_name", "last_name", "modified_by", "created_by"),
             "update"=>array("id", "nickname", "first_name", "last_name", "modified_by"),
@@ -20,12 +20,30 @@ class Person extends DB_Wrapper
     protected function prepareData($rawData, $filter)
     {
         $data = array(
-            "id"=>array("value"=>$rawData["id"], "type"=>\PDO::PARAM_INT),
-            "nickname"=>array("value"=>$rawData["nickname"], "type"=>\PDO::PARAM_STR),
-            "first_name"=>array("value"=>$rawData["first_name"], "type"=>\PDO::PARAM_STR),
-            "last_name"=>array("value"=>$rawData["last_name"], "type"=>\PDO::PARAM_STR),
-            "modified_by"=>array("value"=>$rawData["modified_by"], "type"=>\PDO::PARAM_STR),
-            "created_by"=>array("value"=>$rawData["created_by"], "type"=>\PDO::PARAM_STR),
+            "id" => array(
+                "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "nickname" => array(
+                "value" => isset($rawData["nickname"]) ? $rawData["nickname"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "first_name" => array(
+                "value" => isset($rawData["first_name"]) ? $rawData["first_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "last_name" => array(
+                "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "modified_by" => array(
+                "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "created_by" => array(
+                "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
         );
         
         return $this->filterData($data, $filter);

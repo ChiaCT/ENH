@@ -1,19 +1,19 @@
 <?php
-namespace ENH\Core;
+namespace ENH\Database;
 
 /**
- * Description of AccountType
+ * Description of email
  *
  * @author CTSAI
  */
-class AccountType extends DB_Wrapper
+class Email extends DB_Wrapper
 {
-    public function __construct($config, $option = false)
+    public function __construct($option = false)
     {
-        parent::__construct($config, $option);
+        parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("type_name", "modified_by", "created_by"),
-            "update"=>array("id", "type_name", "modified_by"),
+            "insert"=>array("email_type", "email_address", "modified_by", "created_by"),
+            "update"=>array("id", "email_type", "email_address", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -21,19 +21,35 @@ class AccountType extends DB_Wrapper
     protected function prepareData($rawData, $filter)
     {
         $data = array(
-            "id"=>array("value"=>$rawData["id"], "type"=>\PDO::PARAM_INT),
-            "type_name"=>array("value"=>$rawData["type_name"], "type"=>\PDO::PARAM_STR),
-            "modified_by"=>array("value"=>$rawData["modified_by"], "type"=>\PDO::PARAM_STR),
-            "created_by"=>array("value"=>$rawData["created_by"], "type"=>\PDO::PARAM_STR),
+            "id" => array(
+                "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "email_type" => array(
+                "value" => isset($rawData["email_type"]) ? $rawData["email_type"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "email_address" => array(
+                "value" => isset($rawData["email_address"]) ? $rawData["email_address"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "modified_by" => array(
+                "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "created_by" => array(
+                "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
         );
         
         return $this->filterData($data, $filter);
     }
-
+    
     public function delete($id)
     {
         $stmt = "   DELETE
-                    FROM    `account_type`
+                    FROM    `email`
                     WHERE   `id` = :id;";
         
         return parent::exec($stmt, $this->prepareData(array("id"=>$id), "delete"));
@@ -42,12 +58,13 @@ class AccountType extends DB_Wrapper
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
         $stmt = "   SELECT  `id`,                       
-                            `type_name`,
+                            `email_type`,
+                            `email_address`,
                             `modified_by`,
                             `modified_on`,
                             `created_by`,
                             `created_on`
-                    FROM    `account_type`
+                    FROM    `email`
                     $where
                     $orderBy
                     $limit;";
@@ -57,14 +74,16 @@ class AccountType extends DB_Wrapper
 
     public function insert($rawData)
     {
-        $stmt = "   INSERT INTO `account_type` (
-                        `type_name`,
+        $stmt = "   INSERT INTO `email` (
+                        `email_type`,
+                        `email_address`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
                         `created_on`
                     ) VALUES (
-                        :type_name,
+                        :email_type,
+                        :email_address,
                         :modified_by,
                         NOW(),
                         :created_by,
@@ -77,8 +96,9 @@ class AccountType extends DB_Wrapper
 
     public function update($rawData)
     {
-        $stmt = "   UPDATE  `account_type`
-                    SET     `type_name` = :type_name,
+        $stmt = "   UPDATE  `email`
+                    SET     `email_type` = :email_type,
+                            `email_address` = :email_address,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";
