@@ -24,7 +24,7 @@ $insertAddressData = array(
     "created_by"=>"SYSTEM"
 );
 $updateAddressData = array(
-    "id"=>null,
+    "id"=>1,
     "address_ln1"=>"This should be line 1",
     "address_ln2"=>"222 Route 2",
     "city"=>"New Brunswick",
@@ -42,7 +42,7 @@ $insertEmailData = array(
     "created_by"=>"SYSTEM"
 );
 $updateEmailData = array(
-    "id"=>null,
+    "id"=>1,
     "email_type"=>"PERSONAL",
     "email_address"=>"personalemail@example.net",
     "modified_by"=>"ctsai",
@@ -58,7 +58,7 @@ $insertPhoneData = array(
     "created_by"=>"SYSTEM"
 );
 $updatePhoneData = array(
-    "id"=>null,
+    "id"=>1,
     "phone_type"=>"PERSONAL",
     "phone_number"=>"(987)654-3210",
     "phone_ext"=>"4321",
@@ -212,7 +212,7 @@ $updateAccountData = array(
     "created_by"=>"SYSTEM"
 );
 
-//Account TEST DATA
+//Cash TEST DATA
 $insertCashData = array(
     "id"=>null,
     "hundred"=>1,

@@ -1,3 +1,4 @@
 /vendor
 /nbproject
 /src/include/config-dev.php
+/src/include/test.php

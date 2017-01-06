@@ -65,7 +65,7 @@ abstract class DB_Wrapper
      * @param mixed $option
      * @return mixed
      */
-    protected function exec($stmt, $data, $option = false)
+    public function exec($stmt, $data, $option = false)
     {
         try {
             $sth = self::$dbh->prepare($stmt);
@@ -83,7 +83,7 @@ abstract class DB_Wrapper
             die($ex->getMessage());
         }
     }
-    protected function select($stmt)
+    public function select($stmt)
     {
         try {
             $result = self::$dbh->query($stmt);

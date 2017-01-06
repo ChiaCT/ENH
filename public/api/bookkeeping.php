@@ -3,6 +3,7 @@ namespace ENH\Api;
 
 require_once "../../src/include/config-dev.php";
 require_once "../../src/include/test.php";
+require_once "../../src/include/init-data.php";
 require_once "../../src/include/ENHAutoloader.php";
 
 //require_once "../../src/Database/DB_Wrapper.php";
@@ -23,6 +24,7 @@ require_once "../../src/include/ENHAutoloader.php";
 $loader = new \ENH\Core\ENHAutoloaderClass;
 $loader->register();
 $loader->addNamespace("ENH\Database", "../../src/Database");
+$loader->addNamespace("ENH\Bookkeeping", "../../src/Bookkeeping");
 
 $dsn      = "mysql:host=" . ENH_MYSQL_HOST . ";dbname=" . ENH_MYSQL_DBNAME;
 $dbConfig = array("dsn"=>$dsn, "username"=>ENH_MYSQL_USERNAME, "password"=>ENH_MYSQL_PASSWORD);
@@ -44,7 +46,7 @@ $data   = json_encode(trim(filter_input($filter, "data")));
 //$testInsertData = $insertCashData;
 //$testUpdateData = $updateCashData;
 $db = \ENH\Database\DB_Wrapper::instance();
-$account = new \ENH\Database\Account();
+$accountType = new \ENH\Database\AccountType();
 switch ($action) {
     case "account_add_person":
         
@@ -86,35 +88,38 @@ switch ($action) {
         
         break;
     case "test_reset":
+        print_r("-----------------reset-----------------\n");
+        $reset = $accountType->resetDB(ENH_MYSQL_DBNAME);
+
 //        print_r("-----------------reset-----------------\n");
 //        $result  = $testObj->resetTable("account");
         
-//        print_r("\n-----------------insert-----------------\n");
-//        $insert  = $testObj->insert($testInsertData);
-//        if ($insert["success"]) {
-//            $lastInsertId = $insert["lastId"];
-//            print_r("\n-----------------select-----------------\n");
-//            $selectInsert = $testObj->getRow("WHERE id=$lastInsertId");
-//            print_r($selectInsert["rows"][0]);
-//            print_r("Last Id: $lastInsertId\n");
-//            print_r("\n-----------------update-----------------\n");
-//            $testUpdateData["id"] = $lastInsertId;
-//            $update = $testObj->update($testUpdateData);
-//        
-//            print_r("\n-----------------select-----------------\n");
-//            $selectUpdate  = $testObj->getRow("WHERE id=$lastInsertId");
-//            print_r($selectUpdate["rows"][0]);
-//            
-//            print_r("\n-----------------delete-----------------\n");
-//            $delete  = $testObj->delete($lastInsertId);
-//            
-//            print_r("\n-----------------select-----------------\n");
-//            $selectUpdate  = $testObj->getRow();
-//            print_r($selectUpdate["rows"]);
-//        } else {
-//            print_r("\n-----------------insert failed-----------------\n");
+        
+//        foreach ($accountTypeData as $data) {
+//            $accountInsert = $accountType->insert($data);
 //        }
-        $accountInsert = $account->insert($insertAccountData);
-        $accountSelect = $account->getRow();
+//        $accountSelect = $accountType->getRow();
+//        $cm = new \ENH\Bookkeeping\CompanyManagement($db);
+//        $data1 = array(
+//            "company"=>$companyData[0],
+//            "address"=>$addressData[0],
+//            "email"=>$emailData[0],
+//            "phone"=>$phoneData[0]
+//        );
+//        $data2 = array(
+//            "company"=>$companyData[1],
+//            "address"=>$addressData[1],
+//            "email"=>$emailData[0],
+//            "phone"=>$phoneData[0]
+//        );
+//        $cm->addNew($data1, "company");
+//        $cm->addNew($data2, "company");
+//        $rows = $cm->getRow();
+//        print_r($rows["rows"][0]);
+//        $cm->update($updateAddressData, "address");
+//        $cm->update($updateEmailData, "email");
+//        $cm->update($updatePhoneData, "phone");
+//        $rows = $cm->getRow();
+//        print_r($rows["rows"][0]);
         break;
 }

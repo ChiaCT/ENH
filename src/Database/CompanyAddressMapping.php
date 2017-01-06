@@ -6,7 +6,7 @@ namespace ENH\Database;
  *
  * @author CTSAI
  */
-class CompanyAddressMapping extends DB_Wrapper
+class CompanyAddressMapping extends DB_Wrapper implements MappingTable
 {
     public function __construct($option = false)
     {
@@ -91,5 +91,18 @@ class CompanyAddressMapping extends DB_Wrapper
         
         return $result;
     }
-
+    
+    public function getId($id1, $id2, $and = '')
+    {
+        $stmt   = " SELECT  *
+                    FROM    `company_address_mapping`
+                    WHERE   company_id = '$id1' AND address_id = '$id2'
+                    $and";
+        $select = $this->company->select($stmt);
+        if ($select["success"]) {
+            return $select["rows"][0]["id"];
+        } else {
+            return false;
+        }
+    }
 }

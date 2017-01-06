@@ -13,7 +13,7 @@ class Person extends DB_Wrapper
         parent::__construct($option);
         $this->dataFilter = array(
             "insert"=>array("nickname", "first_name", "last_name", "modified_by", "created_by"),
-            "update"=>array("id", "nickname", "first_name", "last_name", "modified_by"),
+            "update"=>array("id", "nickname", "first_name", "last_name", "active", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -35,6 +35,10 @@ class Person extends DB_Wrapper
             "last_name" => array(
                 "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
                 "type" => \PDO::PARAM_STR
+            ),
+            "active" => array(
+                "value" => isset($rawData["active"]) ? $rawData["active"] : '',
+                "type" => \PDO::PARAM_BOOL
             ),
             "modified_by" => array(
                 "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
@@ -64,6 +68,7 @@ class Person extends DB_Wrapper
                             `nickname`,
                             `first_name`,
                             `last_name`,
+                            `active`,
                             `modified_by`,
                             `modified_on`,
                             `created_by`,
@@ -82,6 +87,7 @@ class Person extends DB_Wrapper
                         `nickname`,
                         `first_name`,
                         `last_name`,
+                        `active`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
@@ -90,6 +96,7 @@ class Person extends DB_Wrapper
                         :nickname,
                         :first_name,
                         :last_name,
+                        1,
                         :modified_by,
                         NOW(),
                         :created_by,
@@ -106,6 +113,7 @@ class Person extends DB_Wrapper
                     SET     `nickname` = :nickname,
                             `first_name` = :first_name,
                             `last_name` = :last_name,
+                            `active` = :active,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";
