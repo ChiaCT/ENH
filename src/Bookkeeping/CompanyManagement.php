@@ -94,15 +94,15 @@ class CompanyManagement implements EntityInterface
     {
         switch ($table) {
             case "address":
-                $camId  = $this->table["caMap"]->getId($id, $id2);
+                $camId  = $this->table["caMap"]->getId($id1, $id2);
                 $delete = $this->table["caMap"]->delete($camId);
                 break;
             case "email":
-                $cemId  = $this->table["ceMap"]->getId($id, $id2);
+                $cemId  = $this->table["ceMap"]->getId($id1, $id2);
                 $delete = $this->table["ceMap"]->delete($cemId);
                 break;
             case "phone":
-                $cpmId  = $this->table["cpMap"]->getId($id, $id2);
+                $cpmId  = $this->table["cpMap"]->getId($id1, $id2);
                 $delete = $this->table["cpMap"]->delete($cpmId);
                 break;
             case "company":
@@ -138,21 +138,21 @@ class CompanyManagement implements EntityInterface
     }
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  c.id `company_id`
-                            , `company_name`
-                            , a.id `address_id`
-                            , `address_ln1`
-                            , `address_ln2`
-                            , `city`
-                            , `state`
-                            , `zip`
-                            , p.id `phone_id`
-                            , `phone_type`
-                            , `phone_number`
-                            , `phone_ext`
-                            , e.id `email_id`
-                            , `email_type`
-                            , `email_address`
+        $stmt = "   SELECT  c.id `company_id`,
+                            `company_name`,
+                            a.id `address_id`,
+                            `address_ln1`,
+                            `address_ln2`,
+                            `city`,
+                            `state`,
+                            `zip`,
+                            p.id `phone_id`,
+                            `phone_type`,
+                            `phone_number`,
+                            `phone_ext`,
+                            e.id `email_id`,
+                            `email_type`,
+                            `email_address`
                     FROM    `company` AS c
                     JOIN    `company_address_mapping` AS cam ON c.id = cam.company_id
                     JOIN    `address` AS a ON cam.address_id = a.id

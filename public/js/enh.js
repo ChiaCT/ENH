@@ -1,5 +1,6 @@
 (function (enh, undefined) {
     var url = "api/bookkeeping.php";
+    var testUrl = "test/test.php";
     function init()
     {
         console.log("init");
@@ -8,7 +9,7 @@
     {
         return $.ajax({
             type: "POST",
-            url: url,
+            url: testUrl,
             dataType: "json",
             data: {
                 action: "test_reset"

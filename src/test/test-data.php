@@ -83,13 +83,13 @@ $updatePersonData = array(
     "created_by"=>"SYSTEM"
 );
 //ACCOUNT_TYPE TEST DATA
-$insertAccountTypeData = array(
+$insertTransactionCategoryData = array(
     "id"=>null,
     "type_name"=>"Sale",
     "modified_by"=>"SYSTEM",
     "created_by"=>"SYSTEM"
 );
-$updateAccountTypeData = array(
+$updateTransactionCategoryData = array(
     "id"=>null,
     "type_name"=>"Tipe",
     "modified_by"=>"ctsai",

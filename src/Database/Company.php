@@ -13,7 +13,7 @@ class Company extends DB_Wrapper
         parent::__construct($option);
         $this->dataFilter = array(
             "insert"=>array("company_name", "modified_by", "created_by"),
-            "update"=>array("id", "company_name", "active", "modified_by"),
+            "update"=>array("id", "company_name", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -28,10 +28,6 @@ class Company extends DB_Wrapper
             "company_name" => array(
                 "value" => isset($rawData["company_name"]) ? $rawData["company_name"] : '',
                 "type" => \PDO::PARAM_STR
-            ),
-            "active" => array(
-                "value" => isset($rawData["active"]) ? $rawData["active"] : '',
-                "type" => \PDO::PARAM_BOOL
             ),
             "modified_by" => array(
                 "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
@@ -59,7 +55,6 @@ class Company extends DB_Wrapper
     {
         $stmt = "   SELECT  `id`
                             `company_name`,
-                            `active`,
                             `modified_by`,
                             `modified_on`,
                             `created_by`,
@@ -76,7 +71,6 @@ class Company extends DB_Wrapper
     {
         $stmt = "   INSERT INTO `company` (
                         `company_name`,
-                        `active`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
@@ -98,7 +92,6 @@ class Company extends DB_Wrapper
     {
         $stmt = "   UPDATE  `company`
                     SET     `company_name` = :company_name,
-                            `active` = :active,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";

@@ -2,18 +2,30 @@
 namespace ENH\Database;
 
 /**
- * Description of person
+ * Description of Account
  *
  * @author CTSAI
  */
-class Person extends DB_Wrapper
+class Account extends DB_Wrapper
 {
     public function __construct($option = false)
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("nickname", "first_name", "last_name", "modified_by", "created_by"),
-            "update"=>array("id", "nickname", "first_name", "last_name", "active", "modified_by"),
+            "insert"=>array(
+                "account_name",
+                "account_type_id",
+                "active",
+                "modified_by",
+                "created_by"
+            ),
+            "update"=>array(
+                "id",
+                "account_name",
+                "account_type_id",
+                "active",
+                "modified_by"
+            ),
             "delete"=>array("id")
         );
     }
@@ -22,22 +34,22 @@ class Person extends DB_Wrapper
         $data = array(
             "id" => array(
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type"=>\PDO::PARAM_INT
+            ),
+            "account_name" => array(
+                "value" => isset($rawData["account_name"]) ? $rawData["account_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "account_type_id" => array(
+                "value" => isset($rawData["account_type_id"]) ? $rawData["account_type_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
-            "nickname" => array(
-                "value" => isset($rawData["nickname"]) ? $rawData["nickname"] : '',
-                "type" => \PDO::PARAM_STR
-            ),
-            "first_name" => array(
-                "value" => isset($rawData["first_name"]) ? $rawData["first_name"] : '',
-                "type" => \PDO::PARAM_STR
-            ),
-            "last_name" => array(
-                "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
-                "type" => \PDO::PARAM_STR
+            "active" => array(
+                "value" => isset($rawData["active"]) ? $rawData["active"] : '',
+                "type" => \PDO::PARAM_BOOL
             ),
             "modified_by" => array(
-                "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
+                "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
                 "type" => \PDO::PARAM_STR
             ),
             "created_by" => array(
@@ -52,7 +64,7 @@ class Person extends DB_Wrapper
     public function delete($id)
     {
         $stmt = "   DELETE
-                    FROM    `person`
+                    FROM    `account`
                     WHERE   `id` = :id;";
         
         return parent::exec($stmt, $this->prepareData(array("id"=>$id), "delete"));
@@ -61,14 +73,14 @@ class Person extends DB_Wrapper
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
         $stmt = "   SELECT  `id`,                       
-                            `nickname`,
-                            `first_name`,
-                            `last_name`,
+                            `account_name`,
+                            `account_type_id`,
+                            `active`,
                             `modified_by`,
                             `modified_on`,
                             `created_by`,
                             `created_on`
-                    FROM    `person`
+                    FROM    `account`
                     $where
                     $orderBy
                     $limit;";
@@ -78,19 +90,18 @@ class Person extends DB_Wrapper
 
     public function insert($rawData)
     {
-        $stmt = "   INSERT INTO `person` (
-                        `nickname`,
-                        `first_name`,
-                        `last_name`,
+        $stmt = "   INSERT INTO `account` (
+                        `account_name`,
+                        `account_type_id`,
+                        `active`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
                         `created_on`
                     ) VALUES (
-                        :nickname,
-                        :first_name,
-                        :last_name,
-                        1,
+                        :account_name,
+                        :account_type_id,
+                        :active,
                         :modified_by,
                         NOW(),
                         :created_by,
@@ -103,10 +114,10 @@ class Person extends DB_Wrapper
 
     public function update($rawData)
     {
-        $stmt = "   UPDATE  `person`
-                    SET     `nickname` = :nickname,
-                            `first_name` = :first_name,
-                            `last_name` = :last_name,
+        $stmt = "   UPDATE  `account`
+                    SET     `account_name` = :account_name,
+                            `account_type_id` = :account_type_id,
+                            `active` = :active,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";
