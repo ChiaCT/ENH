@@ -12,8 +12,8 @@ class Note extends DB_Wrapper
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("note", "modified_by", "created_by"),
-            "update"=>array("id", "note", "type_name", "modified_by"),
+            "insert"=>array("transaction_id", "note", "modified_by", "created_by"),
+            "update"=>array("id", "transaction_id", "note", "type_name", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -23,6 +23,10 @@ class Note extends DB_Wrapper
         $data = array(
             "id" => array(
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "transaction_id" => array(
+                "value" => isset($rawData["transaction_id"]) ? $rawData["transaction_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
             "note" => array(
@@ -53,7 +57,8 @@ class Note extends DB_Wrapper
 
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`,                       
+        $stmt = "   SELECT  `id`,
+                            `transaction_id`,
                             `note`,
                             `modified_by`,
                             `modified_on`,
@@ -70,12 +75,14 @@ class Note extends DB_Wrapper
     public function insert($rawData)
     {
         $stmt = "   INSERT INTO `note` (
+                        `transaction_id`,
                         `note`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
                         `created_on`
                     ) VALUES (
+                        :transaction_id,
                         :note,
                         :modified_by,
                         NOW(),
@@ -91,6 +98,7 @@ class Note extends DB_Wrapper
     {
         $stmt = "   UPDATE  `note`
                     SET     `note` = :note,
+                            `transaction_id` = :transaction_id,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";

@@ -12,8 +12,8 @@ class Email extends DB_Wrapper
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("email_type", "email_address", "modified_by", "created_by"),
-            "update"=>array("id", "email_type", "email_address", "modified_by"),
+            "insert"=>array("contact_id", "contact_type_id", "email_address", "modified_by", "created_by"),
+            "update"=>array("id", "contact_id", "contact_type_id", "email_address", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -25,9 +25,13 @@ class Email extends DB_Wrapper
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
-            "email_type" => array(
-                "value" => isset($rawData["email_type"]) ? $rawData["email_type"] : '',
-                "type" => \PDO::PARAM_STR
+            "contact_id" => array(
+                "value" => isset($rawData["contact_id"]) ? $rawData["contact_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "contact_type_id" => array(
+                "value" => isset($rawData["contact_type_id"]) ? $rawData["contact_type_id"] : '',
+                "type" => \PDO::PARAM_INT
             ),
             "email_address" => array(
                 "value" => isset($rawData["email_address"]) ? $rawData["email_address"] : '',
@@ -57,8 +61,9 @@ class Email extends DB_Wrapper
 
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`,                       
-                            `email_type`,
+        $stmt = "   SELECT  `id`,
+                            `contact_id`,
+                            `contact_type_id`,
                             `email_address`,
                             `modified_by`,
                             `modified_on`,
@@ -75,14 +80,16 @@ class Email extends DB_Wrapper
     public function insert($rawData)
     {
         $stmt = "   INSERT INTO `email` (
-                        `email_type`,
+                        `contact_id`,
+                        `contact_type_id`,
                         `email_address`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
                         `created_on`
                     ) VALUES (
-                        :email_type,
+                        :contact_id,
+                        :contact_type_id,
                         :email_address,
                         :modified_by,
                         NOW(),
@@ -97,7 +104,8 @@ class Email extends DB_Wrapper
     public function update($rawData)
     {
         $stmt = "   UPDATE  `email`
-                    SET     `email_type` = :email_type,
+                    SET     `contact_id` = :contact_id,
+                            `contact_type_id` = :contact_type_id,
                             `email_address` = :email_address,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()

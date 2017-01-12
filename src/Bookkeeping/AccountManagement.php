@@ -8,31 +8,128 @@ namespace ENH\Bookkeeping;
  */
 class AccountManagement
 {
-    private $account, $company, $person, $email, $address, $phone;
-    public function __construct()
+    private $dbh, $table;
+    public function __construct($dbh)
     {
-        $this->account = new \ENH\Database\Account();
-        $this->email   = new \ENH\Database\Email();
-        $this->address = new \ENH\Database\Address();
-        $this->phone   = new \ENH\Database\Phone();
-        $this->company = new \ENH\Database\Company();
-        $this->person  = new \ENH\Database\Person();
+        $this->dbh = $dbh;
     }
-    
-    public function addNewAccount($type, $data)
+    public function addNewAccount()
     {
-        if ($type === "company") {
-            return $this->addNewCompanyAccount($data);
-        } else {
-            return $this->addNewPersonAccount($data);
+        
+    }
+    public function addNewContact($cId, $pId, $type, $data)
+    {
+        switch ($type) {
+            case "address":
+                $result = $this->addNewAddress($cId, $pId, $data);
+                break;
+            case "email":
+                $result = $this->addNewEmail($cId, $pId, $data);
+                break;
+            case "phone":
+                $result = $this->addNewPhone($cId, $pId, $data);
+                break;
         }
     }
-    
-    public function addNewCompanyAccount($data)
+    private function addNewCompany($aData, $cData)
     {
+        
+    }
+    private function addNewPerson($rawData)
+    {
+        $stmt = "   START TRANSACTION;
+                    #PERSON
+                    INSERT INTO `person` (
+                            `nickname`,
+                            `first_name`,
+                            `last_name`,
+                            `modified_by`,
+                            `modified_on`,
+                            `created_by`,
+                            `created_on`
+                    ) VALUES (
+                            :first_name,
+                    :last_name,
+                    :modified_by,
+                    NOW(),
+                    :created_by,
+                    NOW()
+                    );
+                    SET @personId = LAST_INSERT_ID();
+
+                    #CONTACT
+                    INSERT INTO `contact` (
+                        `company_id`,
+                        `person_id`
+                    ) VALUES (
+                        0,
+                        @personId
+                    );
+                    SET @contactId = LAST_INSERT_ID();
+
+                    #ADDRESS
+                    INSERT INTO `address` (
+                        `contact_id`,
+                        `address_ln1`,
+                        `address_ln2`,
+                        `city`,
+                        `state`,
+                        `zip`,
+                        `modified_by`,
+                        `modified_on`,
+                        `created_by`,
+                        `created_on`
+                    ) VALUES (
+                        @contactId,
+                        :address_ln1,
+                        :address_ln2,
+                        :city,
+                        :state,
+                        :zip,
+                        :modified_by,
+                        NOW(),
+                        :created_by,
+                        NOW()
+                    );
+                    SET @addressId = LAST_INSERT_ID();
+                    COMMIT;";
+        $data = array(
+            "nickname" => array(
+                "value" => isset($rawData["person"]["nickname"]) ? $rawData["person"]["nickname"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "nickname" => array(
+                "value" => isset($rawData["nickname"]) ? $rawData["nickname"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "first_name" => array(
+                "value" => isset($rawData["first_name"]) ? $rawData["first_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "last_name" => array(
+                "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "modified_by" => array(
+                "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+            "created_by" => array(
+                "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
+                "type" => \PDO::PARAM_STR
+            ),
+        );
     }
     
-    public function addNewPersonAccount($data)
+    private function addNewAddress($cId, $pId, $address)
+    {
+        
+    }
+    private function addNewPhone($cId, $pId, $phone)
+    {
+        
+    }
+    private function addNewEmail($cId, $pId, $email)
     {
         
     }

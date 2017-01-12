@@ -12,8 +12,8 @@ class Company extends DB_Wrapper
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("company_name", "modified_by", "created_by"),
-            "update"=>array("id", "company_name", "modified_by"),
+            "insert"=>array("account_id", "company_name", "modified_by", "created_by"),
+            "update"=>array("id", "account_id", "company_name", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -23,6 +23,10 @@ class Company extends DB_Wrapper
         $data = array(
             "id" => array(
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "account_id" => array(
+                "value" => isset($rawData["account_id"]) ? $rawData["account_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
             "company_name" => array(
@@ -53,7 +57,8 @@ class Company extends DB_Wrapper
     
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`
+        $stmt = "   SELECT  `id`,
+                            `account_id`,
                             `company_name`,
                             `modified_by`,
                             `modified_on`,
@@ -70,14 +75,15 @@ class Company extends DB_Wrapper
     public function insert($rawData)
     {
         $stmt = "   INSERT INTO `company` (
+                        `account_id`,
                         `company_name`,
                         `modified_by`,
                         `modified_on`,
                         `created_by`,
                         `created_on`
                     ) VALUES (
+                        :account_id,
                         :company_name,
-                        1,
                         :modified_by,
                         NOW(),
                         :created_by,
@@ -91,7 +97,8 @@ class Company extends DB_Wrapper
     public function update($rawData)
     {
         $stmt = "   UPDATE  `company`
-                    SET     `company_name` = :company_name,
+                    SET     `account_id` = :account_id,
+                            `company_name` = :company_name,
                             `modified_by` = :modified_by,
                             `modified_on` = NOW()
                     WHERE   `id` = :id;";

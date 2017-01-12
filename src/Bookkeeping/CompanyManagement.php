@@ -85,8 +85,10 @@ class CompanyManagement implements EntityInterface
         }
         if ($result) {
             $this->dbh->commit();
+            return $insert;
         } else {
             $this->dbh->rollBack();
+            return false;
         }
     }
 

@@ -14,9 +14,8 @@ class Transaction extends DB_Wrapper
         $this->dataFilter = array(
             "insert"=>array(
                 "account_id",
+                "transaction_type_id",
                 "payment_type_id",
-                "reference_id",
-                "note_id",
                 "amount",
                 "transaction_date",
                 "pay_date",
@@ -27,9 +26,8 @@ class Transaction extends DB_Wrapper
             "update"=>array(
                 "id",
                 "account_id",
+                "transaction_type_id",
                 "payment_type_id",
-                "reference_id",
-                "note_id",
                 "amount",
                 "transaction_date",
                 "pay_date",
@@ -51,16 +49,12 @@ class Transaction extends DB_Wrapper
                 "value" => isset($rawData["account_id"]) ? $rawData["account_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
+            "transaction_type_id" => array(
+                "value" => isset($rawData["transaction_type_id"]) ? $rawData["transaction_type_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
             "payment_type_id" => array(
                 "value" => isset($rawData["payment_type_id"]) ? $rawData["payment_type_id"] : '',
-                "type" => \PDO::PARAM_INT
-            ),
-            "reference_id" => array(
-                "value" => isset($rawData["reference_id"]) ? $rawData["reference_id"] : '',
-                "type" => \PDO::PARAM_INT
-            ),
-            "note_id" => array(
-                "value" => isset($rawData["note_id"]) ? $rawData["note_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
             "amount" => array(
@@ -105,9 +99,8 @@ class Transaction extends DB_Wrapper
     {
         $stmt = "   SELECT  `id`,                       
                             `account_id`,
+                            `transaction_type_id`,
                             `payment_type_id`,
-                            `reference_id`,
-                            `note_id`,
                             `amount`,
                             `transaction_date`,
                             `pay_date`,
@@ -128,9 +121,8 @@ class Transaction extends DB_Wrapper
     {
         $stmt = "   INSERT INTO `transaction` (
                         `account_id`,
+                        `transaction_type_id`,
                         `payment_type_id`,
-                        `reference_id`,
-                        `note_id`,
                         `amount`,
                         `transaction_date`,
                         `pay_date`,
@@ -141,9 +133,8 @@ class Transaction extends DB_Wrapper
                         `created_on`
                     ) VALUES (
                         :account_id,
+                        :transaction_type_id,
                         :payment_type_id,
-                        :reference_id,
-                        :note_id,
                         :amount,
                         :transaction_date,
                         :pay_date,
@@ -162,9 +153,8 @@ class Transaction extends DB_Wrapper
     {
         $stmt = "   UPDATE  `transaction`
                     SET     `account_id` = :account_id,
+                            `transaction_type_id` = :transaction_type_id,
                             `payment_type_id` = :payment_type_id,
-                            `reference_id` = :reference_id,
-                            `note_id` = :note_id,
                             `amount` = :amount,
                             `transaction_date` = :transaction_date,
                             `pay_date` = :pay_date,

@@ -12,7 +12,7 @@ class Phone extends DB_Wrapper
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("phone_type", "phone_number", "phone_ext", "modified_by", "created_by"),
+            "insert"=>array("contact_type_id", "phone_number", "phone_ext", "modified_by", "created_by"),
             "update"=>array("id", "phone_type", "phone_number", "phone_ext", "modified_by"),
             "delete"=>array("id")
         );
@@ -25,9 +25,9 @@ class Phone extends DB_Wrapper
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
-            "phone_type" => array(
-                "value" => isset($rawData["phone_type"]) ? $rawData["phone_type"] : '',
-                "type" => \PDO::PARAM_STR
+            "contact_type_id" => array(
+                "value" => isset($rawData["contact_type_id"]) ? $rawData["contact_type_id"] : '',
+                "type" => \PDO::PARAM_INT
             ),
             "phone_number" => array(
                 "value" => isset($rawData["phone_number"]) ? $rawData["phone_number"] : '',
@@ -62,7 +62,7 @@ class Phone extends DB_Wrapper
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
         $stmt = "   SELECT  `id`,                       
-                            `phone_type`,
+                            `contact_type_id`,
                             `phone_number`,
                             `phone_ext`,
                             `modified_by`,
@@ -80,7 +80,7 @@ class Phone extends DB_Wrapper
     public function insert($rawData)
     {
         $stmt = "   INSERT INTO `phone` (
-                        `phone_type`,
+                        `contact_type_id`,
                         `phone_number`,
                         `phone_ext`,
                         `modified_by`,
@@ -88,7 +88,7 @@ class Phone extends DB_Wrapper
                         `created_by`,
                         `created_on`
                     ) VALUES (
-                        :phone_type,
+                        :contact_type_id,
                         :phone_number,
                         :phone_ext,
                         :modified_by,
@@ -104,7 +104,7 @@ class Phone extends DB_Wrapper
     public function update($rawData)
     {
         $stmt = "   UPDATE  `phone`
-                    SET     `phone_type` = :phone_type,
+                    SET     `contact_type_id` = :contact_type_id,
                             `phone_number` = :phone_number,
                             `phone_ext` = :phone_ext,
                             `modified_by` = :modified_by,

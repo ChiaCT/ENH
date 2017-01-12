@@ -116,6 +116,7 @@ abstract class DB_Wrapper
      */
     public function resetDB($db)
     {
+        self::$dbh->query("SET FOREIGN_KEY_CHECKS = 0;");
         $fail    = array();
         $success = array();
         $tables  = $this->getAllTable($db);
@@ -127,6 +128,7 @@ abstract class DB_Wrapper
                 $success[] = $table;
             }
         }
+        self::$dbh->query("SET FOREIGN_KEY_CHECKS = 1;");
         return array("success"=>$success, "fail"=>$fail);
     }
     

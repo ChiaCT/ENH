@@ -12,8 +12,8 @@ class Address extends DB_Wrapper
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("address_ln1", "address_ln2", "city", "state", "zip", "modified_by", "created_by"),
-            "update"=>array("id", "address_ln1", "address_ln2", "city", "state", "zip", "modified_by"),
+            "insert"=>array("contact_id", "contact_type_id", "address_ln1", "address_ln2", "city", "state", "zip", "modified_by", "created_by"),
+            "update"=>array("id", "contact_id", "contact_type_id", "address_ln1", "address_ln2", "city", "state", "zip", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -23,6 +23,14 @@ class Address extends DB_Wrapper
         $data = array(
             "id" => array(
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "contact_id" => array(
+                "value" => isset($rawData["contact_id"]) ? $rawData["contact_id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "contact_type_id" => array(
+                "value" => isset($rawData["contact_type_id"]) ? $rawData["contact_type_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
             "address_ln1"=>array(
@@ -69,7 +77,9 @@ class Address extends DB_Wrapper
 
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`,                       
+        $stmt = "   SELECT  `id`,
+                            `contact_id`,
+                            `contact_type_id`,
                             `address_ln1`,
                             `address_ln2`,
                             `city`,
@@ -90,6 +100,8 @@ class Address extends DB_Wrapper
     public function insert($radData)
     {
         $stmt = "   INSERT INTO `address` (
+                        `contact_id`,
+                        `contact_type_id`,
                         `address_ln1`,
                         `address_ln2`,
                         `city`,
@@ -100,6 +112,8 @@ class Address extends DB_Wrapper
                         `created_by`,
                         `created_on`
                     ) VALUES (
+                        :contact_id,
+                        :contact_type_id,
                         :address_ln1,
                         :address_ln2,
                         :city,
@@ -118,7 +132,9 @@ class Address extends DB_Wrapper
     public function update($rawData)
     {
         $stmt = "   UPDATE  `address`
-                    SET     `address_ln1` = :address_ln1,
+                    SET     `contact_id` = :contact_id,
+                            `contact_type_id` = :contact_type_id,
+                            `address_ln1` = :address_ln1,
                             `address_ln2` = :address_ln2,
                             `city` = :city,
                             `state` = :state,

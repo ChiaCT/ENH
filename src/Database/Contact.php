@@ -2,41 +2,34 @@
 namespace ENH\Database;
 
 /**
- * Description of newPHPClass
+ * Description of Contact
  *
  * @author CTSAI
  */
-class AccountCompanyMapping extends DB_Wrapper
+class Contact extends DB_Wrapper
 {
     public function __construct($option = false)
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array(
-                "account_id",
-                "company_id"
-            ),
-            "update"=>array(
-                "id",
-                "account_id",
-                "company_id",
-            ),
+            "insert"=>array("company_id", "person_id"),
+            "update"=>array("id", "company_id", "person_id"),
             "delete"=>array("id")
         );
-    } 
+    }
     protected function prepareData($rawData, $filter)
     {
         $data = array(
             "id" => array(
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
-                "type"=>\PDO::PARAM_INT
-            ),
-            "account_id" => array(
-                "value" => isset($rawData["account_id"]) ? $rawData["account_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
             "company_id" => array(
-                "value" => isset($rawData["company_id"]) ? $rawData["company_id"] : '',
+                "value" => isset($rawData["company_id"]) ? $rawData["company_id"] : null,
+                "type" => \PDO::PARAM_INT
+            ),
+            "person_id" => array(
+                "value" => isset($rawData["person_id"]) ? $rawData["person_id"] : null,
                 "type" => \PDO::PARAM_INT
             ),
         );
@@ -47,7 +40,7 @@ class AccountCompanyMapping extends DB_Wrapper
     public function delete($id)
     {
         $stmt = "   DELETE
-                    FROM    `account_company_mapping`
+                    FROM    `contact`
                     WHERE   `id` = :id;";
         
         return parent::exec($stmt, $this->prepareData(array("id"=>$id), "delete"));
@@ -55,10 +48,10 @@ class AccountCompanyMapping extends DB_Wrapper
 
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`,                       
-                            `account_id`,
-                            `company_id`
-                    FROM    `account_company_mapping`
+        $stmt = "   SELECT  `id`,
+                            `company_id`,
+                            `person_id`
+                    FROM    `contact`
                     $where
                     $orderBy
                     $limit;";
@@ -68,12 +61,12 @@ class AccountCompanyMapping extends DB_Wrapper
 
     public function insert($rawData)
     {
-        $stmt = "   INSERT INTO `account_company_mapping` (
-                        `account_id`,
-                        `company_id`
+        $stmt = "   INSERT INTO `contact` (
+                        `company_id`,
+                        `person_id`
                     ) VALUES (
-                        :account_id,
-                        :company_id
+                        :company_id,
+                        :person_id
                     );";
         $result = parent::exec($stmt, $this->prepareData($rawData, "insert"));
         
@@ -82,13 +75,12 @@ class AccountCompanyMapping extends DB_Wrapper
 
     public function update($rawData)
     {
-        $stmt = "   UPDATE  `account_company_mapping`
-                    SET     `account_id` = :account_id,
-                            `company_id` = :company_id
+        $stmt = "   UPDATE  `contact`
+                    SET     `company_id` = :company_id,
+                            `person_id` = :person_id
                     WHERE   `id` = :id;";
         $result = parent::exec($stmt, $this->prepareData($rawData, "update"));
         
         return $result;
     }
-
 }

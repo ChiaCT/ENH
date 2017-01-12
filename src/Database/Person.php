@@ -12,8 +12,8 @@ class Person extends DB_Wrapper
     {
         parent::__construct($option);
         $this->dataFilter = array(
-            "insert"=>array("nickname", "first_name", "last_name", "modified_by", "created_by"),
-            "update"=>array("id", "nickname", "first_name", "last_name", "active", "modified_by"),
+            "insert"=>array("nickname", "account_id", "first_name", "last_name", "modified_by", "created_by"),
+            "update"=>array("id", "account_id", "nickname", "first_name", "last_name", "active", "modified_by"),
             "delete"=>array("id")
         );
     }
@@ -22,6 +22,10 @@ class Person extends DB_Wrapper
         $data = array(
             "id" => array(
                 "value" => isset($rawData["id"]) ? $rawData["id"] : '',
+                "type" => \PDO::PARAM_INT
+            ),
+            "account_id" => array(
+                "value" => isset($rawData["account_id"]) ? $rawData["account_id"] : '',
                 "type" => \PDO::PARAM_INT
             ),
             "nickname" => array(
@@ -37,7 +41,7 @@ class Person extends DB_Wrapper
                 "type" => \PDO::PARAM_STR
             ),
             "modified_by" => array(
-                "value" => isset($rawData["last_name"]) ? $rawData["last_name"] : '',
+                "value" => isset($rawData["modified_by"]) ? $rawData["modified_by"] : '',
                 "type" => \PDO::PARAM_STR
             ),
             "created_by" => array(
@@ -60,7 +64,8 @@ class Person extends DB_Wrapper
 
     public function getRow($where = '', $orderBy = '', $limit = '')
     {
-        $stmt = "   SELECT  `id`,                       
+        $stmt = "   SELECT  `id`,
+                            `account_id`,
                             `nickname`,
                             `first_name`,
                             `last_name`,
@@ -79,6 +84,7 @@ class Person extends DB_Wrapper
     public function insert($rawData)
     {
         $stmt = "   INSERT INTO `person` (
+                        `account_id`,
                         `nickname`,
                         `first_name`,
                         `last_name`,
@@ -87,10 +93,10 @@ class Person extends DB_Wrapper
                         `created_by`,
                         `created_on`
                     ) VALUES (
+                        :account_id,
                         :nickname,
                         :first_name,
                         :last_name,
-                        1,
                         :modified_by,
                         NOW(),
                         :created_by,
@@ -104,7 +110,8 @@ class Person extends DB_Wrapper
     public function update($rawData)
     {
         $stmt = "   UPDATE  `person`
-                    SET     `nickname` = :nickname,
+                    SET     `account_id` = :account_id,
+                            `nickname` = :nickname,
                             `first_name` = :first_name,
                             `last_name` = :last_name,
                             `modified_by` = :modified_by,
