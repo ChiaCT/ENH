@@ -80,7 +80,7 @@ class Type extends DB_Wrapper
             "created_by" => array(
                 "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
                 "type" => \PDO::PARAM_STR
-            ),
+            )
         );
         
         return $this->filterData($data, $filter);
@@ -113,7 +113,6 @@ public function delete($id)
                     $where
                     $orderBy
                     $limit;";
-        
         return parent::select($stmt);
     }
 

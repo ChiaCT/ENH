@@ -25,13 +25,17 @@ class Contact extends DB_Wrapper
                 "type" => \PDO::PARAM_INT
             ),
             "company_id" => array(
-                "value" => isset($rawData["company_id"]) ? $rawData["company_id"] : null,
+                "value" => (isset($rawData["company_id"]) && $rawData["company_id"] > 0)
+                            ? $rawData["company_id"] 
+                            : null,
                 "type" => \PDO::PARAM_INT
             ),
             "person_id" => array(
-                "value" => isset($rawData["person_id"]) ? $rawData["person_id"] : null,
+                "value" => (isset($rawData["person_id"]) && $rawData["person_id"] > 0)
+                            ? $rawData["person_id"] 
+                            : null,
                 "type" => \PDO::PARAM_INT
-            ),
+            )
         );
         
         return $this->filterData($data, $filter);

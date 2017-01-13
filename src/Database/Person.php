@@ -47,7 +47,7 @@ class Person extends DB_Wrapper
             "created_by" => array(
                 "value" => isset($rawData["created_by"]) ? $rawData["created_by"] : '',
                 "type" => \PDO::PARAM_STR
-            ),
+            )
         );
         
         return $this->filterData($data, $filter);

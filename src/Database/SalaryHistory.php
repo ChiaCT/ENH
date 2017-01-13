@@ -62,7 +62,7 @@ class SalaryHistory extends DB_Wrapper
             "created_by" => array(
                 "value" => $rawData["created_by"],
                 "type" => \PDO::PARAM_STR
-            ),
+            )
         );
         
         return $this->filterData($data, $filter);
