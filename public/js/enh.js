@@ -1,14 +1,13 @@
 (function (enh, undefined) {
+    var self = this;
     var bookkeepingUrl = "api/bookkeeping.php";
     var testUrl = "test/test.php";
-    function init()
-    {
-        console.log("init");
-    }
-    function createView(typeOfView, data)
+    var type;
+    
+    function createView(viewType, data)
     {
         var html = '';
-        switch (typeOfView) {
+        switch (viewType) {
             case "getAccountType":
                 html+= "<option value=0>Please select an account type...</option>";
                 $.each(data, function(i, v) {
@@ -18,21 +17,30 @@
         }
         return html;
     }
-    function getAccountType()
+    function getType(type, location)
     {
+        var data = {type: type};
         $.ajax({
             type: "POST",
             url: bookkeepingUrl,
             dataType: "json",
             data: {
-                action: "get_account_type"
+                action: "getType",
+                data: JSON.stringify(data)
             }
-        }).done(function(result) {
-            var view = createView("getAccountType", result);
-            $( "#input-account-type" ).html(view);
+        }).done(function(data) {
+            console.log(data);
+            //setType(data, type, location);
         }).fail(function(error) {
             console.log(error);
         });
+    }
+    function getState(location)
+    {
+        console.log(location);
+    }
+    function setType(data, type, location)
+    {
     }
     function testFunction()
     {
@@ -45,8 +53,15 @@
             }
         });
     }
-    enh.init = function() {
-        getAccountType(location);
+    function init(config)
+    {
+
+    }
+    enh.init = function(config) {
+        getState(config.stateLocation);
+        getType("account", config.accountTypeLocation);
+        getType("address", config.addressTypeLocation);
+        getType("email", config.emailTypeLocation);
     };
     enh.publicTest = function() {
         testFunction().done(function(result) {

@@ -15,10 +15,22 @@ class AccountManagement
         $this->account = new \ENH\Database\Account();
         $this->contact = new \ENH\Database\Contact();
     }
-    public function getAccountType()
+    public function getType($type)
     {
+        var_dump($type);
+        switch ($type) {
+            case "account":
+                $where = "WHERE is_account = 1";
+                break;
+            case "address":
+                $where = "WHERE is_address = 1";
+                break;
+            case "email":
+                $where = "WHERE is_email = 1";
+                break;
+        }
         $accountType = new \ENH\Database\Type();
-        $result = $accountType->getRow("WHERE is_account = 1");
+        $result = $accountType->getRow($where);
         if ($result["success"]) {
             return json_encode($result["rows"]);
         } else {

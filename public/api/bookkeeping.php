@@ -21,13 +21,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 }
 
 $action = strtolower(trim(filter_input($filter, "action")));
-$data   = json_encode(trim(filter_input($filter, "data")));
-
+$data   = json_decode(trim(filter_input($filter, "data")));
 $db = \ENH\Database\DB_Wrapper::instance();
 switch ($action) {
-    case "get_account_type":
-        $am = new \ENH\Bookkeeping\AccountManagement($db);
-        $rows = $am->getAccountType();
+    case "gettype":
+        $am   = new \ENH\Bookkeeping\AccountManagement($db);
+        $rows = $am->getType($data->type);
         echo $rows;
         break;
 }
